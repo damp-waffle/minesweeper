@@ -14,25 +14,31 @@ class Cell{
     uncover(){
         this.uncovered = true;
         this.flagged = false;
+        
         return(this.mine);
     }
     setNum(a){
         if(a > 0){
             this.adjacent = a;
             this.div.innerHTML = String(this.adjacent);
-            this.div.style.color = numColorSet[a - 1];
+            /*this.div.style.color = numColorSet[a - 1];*/
         }
         this.div.classList.remove("covered");
-        this.div.style.backgroundImage = "none";
+        this.div.setAttribute("class","uncovered");
+        this.edge();
+        
+        /*this.div.style.backgroundImage = "none";
         this.div.style.backgroundColor = "#C0C0C0";
-        this.div.style.border = "1px #808080 solid"
+        this.div.style.border = "1px #808080 solid"*/
     }
     blow(b=true){
         if(this.mine && b){
             this.div.style.backgroundImage = "url(sprites.png)";
             this.div.style.backgroundPosition = "0 0";
+            this.div.setAttribute("class","uncovered");
         }
         this.div.classList.remove("covered");
+        
     }
     flag(){
         this.flagged = !(this.flagged);
@@ -43,6 +49,44 @@ class Cell{
         else{
             this.div.classList.remove("flagged");
             this.div.setAttribute("class", "covered");
+        }
+        return this.flagged;
+    }
+    stripBorder(side, bb){
+        var s;
+        if(bb){
+            switch(side){
+                case "left":
+                    this.div.style.borderRight="none";
+                    break;
+                case "up":
+                    this.div.style.borderBottom="none";
+                    break;
+                case "down":
+                    this.div.style.borderTop="none";
+                    break;
+                case "right":
+                    this.div.style.borderLeft="none";
+                    break;
+            }
+        }
+        else{
+            this.div.style.border="";
+        }
+        this.edge();
+    }
+    edge(){
+        if(this.x == 0){
+            this.div.style.borderTop="none";
+        }
+        else if(this.x == col - 1){
+            this.div.style.borderBottom="none";
+        }
+        if(this.y == 0){
+            this.div.style.borderLeft="none";
+        }
+        if(this.y == rows - 1){
+            this.div.style.borderRight="none";
         }
     }
 }
@@ -56,8 +100,14 @@ document.getElementById("height").addEventListener("change", numInput);
 document.getElementById("again").addEventListener("click", restart);
 document.getElementById("new").addEventListener("click", menu);
 document.getElementById("toggle").addEventListener("click", clickToggle);
-document.getElementById("slider").addEventListener("click", function(){clickToggle("Space")});
+document.getElementById("click-toggle").addEventListener("click", function(){clickToggle("Space")});
+document.getElementsByTagName("main")[0].addEventListener("mouseout", function(){currentCell=""})
 document.documentElement.addEventListener("keydown", function(e){clickToggle(e.code)})
+document.getElementById("simple-light").addEventListener("click", themeSelect);
+document.getElementById("simple-dark").addEventListener("click", themeSelect);
+document.getElementById("hover").addEventListener("click", help);
+document.getElementById("close-h").addEventListener("click", closeHelp);
+/*document.getElementById("color-select").addEventListener("input", function(e){changeColor(e.target.value)});*/
 var cells;
 var gameStart=false;
 var alive=true;
@@ -67,11 +117,13 @@ var mines;
 var seconds;
 var interval;
 var uncoveredTiles;
+var currentCell = "";
 var clickMine = true;
 const numColorSet=["blue", "green", "red", "purple", "maroon", "turquoise","black","gray"];
 
 function start(){
     document.getElementById("menu").style.display = "none";
+    document.getElementById("themes").style.display="none";
     alive=true;
     if(gameStart == false){
         if(document.getElementById("easy").checked){
@@ -123,14 +175,15 @@ function start(){
         }
     }
     uncoveredTiles = 0;
-    console.log(cells);
 
     for(i=0; i<rows; i++){
         for(j=0; j<col; j++){
             let x = cells[i][j].x;
             let y = cells[i][j].y;
+            let d = cells[i][j].div;
             document.getElementById(cells[i][j].id).addEventListener("click", function(){trigger(x, y, clickMine)});
             document.getElementById(cells[i][j].id).addEventListener("contextmenu", function(e){e.preventDefault();trigger(x, y, !clickMine)});
+            document.getElementById(cells[i][j].id).addEventListener("mouseover", function(){currentCell=d});
         }
     }
 }
@@ -159,14 +212,15 @@ function trigger(i, j, mb, adj = 0){
                         try{if(cells[x + 1][y + 1].mine){adj++;}}catch(err){} /*down right*/
                         cells[i][j].setNum(adj);
                         if(adj == 0){
-                            try{trigger(x - 1, y - 1, true);}catch(err){}
-                            try{trigger(x - 1, y, true);}catch(err){}
-                            try{trigger(x - 1, y + 1, true);}catch(err){}
-                            try{trigger(x, y - 1, true);}catch(err){}
-                            try{trigger(x, y + 1, true);}catch(err){}
-                            try{trigger(x + 1, y - 1, true);}catch(err){}
-                            try{trigger(x + 1, y, true);}catch(err){}
-                            try{trigger(x + 1, y + 1, true);}catch(err){}
+                            setTimeout(function(){
+                                try{trigger(x - 1, y - 1, true);}catch(err){}
+                                try{trigger(x - 1, y, true);}catch(err){}
+                                try{trigger(x - 1, y + 1, true);}catch(err){}
+                                try{trigger(x, y - 1, true);}catch(err){}
+                                try{trigger(x, y + 1, true);}catch(err){}
+                                try{trigger(x + 1, y - 1, true);}catch(err){}
+                                try{trigger(x + 1, y, true);}catch(err){}
+                                try{trigger(x + 1, y + 1, true);}catch(err){}}, 50)
                         }
                         uncoveredTiles++;
                         if(uncoveredTiles == (rows*col) - mines){
@@ -175,7 +229,12 @@ function trigger(i, j, mb, adj = 0){
                     }
                 }
                 else{
-                    cells[i][j].flag();
+                    bb = cells[i][j].flag();
+                    
+                    try{cells[i - 1][j].stripBorder("up", bb)}catch(err){}
+                    try{cells[i][j - 1].stripBorder("left", bb)}catch(err){}
+                    try{cells[i][j + 1].stripBorder("right", bb)}catch(err){}
+                    try{cells[i + 1][j].stripBorder("down", bb)}catch(err){}
                 }
             }
             
@@ -243,6 +302,7 @@ function gameOver(b=true){
         }
     }
     document.getElementById("menu").style.display ="block";
+    
     document.getElementById("new-game").style.display="none";
     document.getElementById("game-over").style.display="block";
     if(b){
@@ -266,12 +326,6 @@ function select(){
     }
 }
 function numInput(){
-    if(document.getElementById("width").value > document.getElementById("width").getAttribute("max")){
-        document.getElementById("width").value = document.getElementById("width").getAttribute("max");
-    }
-    if(document.getElementById("height").value > document.getElementById("height").getAttribute("max")){
-        document.getElementById("height").value = document.getElementById("height").getAttribute("max");
-    }
     var w = document.getElementById("width").value;
     var h = document.getElementById("height").value;
     var area = w * h;
@@ -283,7 +337,6 @@ function numInput(){
 }
 function restart(){
     clear();
-    document.getElementById("time").innerHTML = "--";
     start();
     gameStart = false;
 }
@@ -292,10 +345,12 @@ function menu(){
     document.getElementById("top").style.display = "none";
     document.getElementById("game-over").style.display = "none";
     document.getElementById("new-game").style.display = "block";
+    document.getElementById("themes").style.display="block";
     clear();
     gameStart = false;
 }
 function clear(){
+    document.getElementById("time").innerHTML = "--";
     b = document.getElementById("game-frame");
     while(b.firstChild){
         b.removeChild(b.firstChild);
@@ -319,14 +374,57 @@ function timeDisplay(s){
         }
     }
 }
-function clickToggle(e="reg"){
+function clickToggle(e){
     if(e == "Space"){
         document.getElementById("toggle").click();
+        if(document.getElementById("toggle").checked){
+            clickMine = false;
+        }
+        else{
+            clickMine = true;
+        }
     }
-    if(document.getElementById("toggle").checked){
-        clickMine = false;
+    else if(e=="KeyQ"){
+        if(clickMine){
+            currentCell.click();
+        }
+        else{
+            currentCell.dispatchEvent(new Event("contextmenu"));
+        }
     }
-    else{
-        clickMine = true;
+    else if(e=="KeyE"){
+        if(clickMine){
+            currentCell.dispatchEvent(new Event("contextmenu"));
+        }
+        else{
+            currentCell.click();
+        }
+    }
+}
+function themeSelect(){
+    var r = document.querySelector(':root');
+    if(document.getElementById("simple-light").checked){
+        r.style.setProperty("--dark-3", "#F0EAD6");
+        r.style.setProperty("--dark-2", "#EEBDB3");
+        r.style.setProperty("--outline", "#bb4a51");
+        
+    }
+    else if(document.getElementById("simple-dark").checked){
+        r.style.setProperty("--dark-3", "#202020");
+        r.style.setProperty("--dark-2", "#673A3D");
+        r.style.setProperty("--outline", "black");
+    }
+}
+function help(){
+    document.getElementById("h").style.visibility = "visible";
+    document.getElementById("h").style.opacity = "100%";
+}
+function closeHelp(){
+    document.getElementById("h").removeAttribute("style");
+}
+function changeColor(color){
+    if(document.getElementById("simple-light").checked || document.getElementById("simple-dark").checked){
+        var r = document.querySelector(':root');
+        r.style.setProperty("--main-color", color);
     }
 }

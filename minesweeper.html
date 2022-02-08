@@ -3,10 +3,19 @@
     <head>
         <title>Minesweeper</title>
         <link rel="stylesheet" type="text/css" href="style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div class="w95" id="top" style="display: none;max-width: fit-content; margin:auto;">
+        <div class="w95" id="themes">
+            <form style="padding:10px;">
+                <input type="radio" id="simple-light" name="theme" value="Simple Light Theme">
+                <label for="simple-light">Light</label>
+                <input type="radio" id="simple-dark" name="theme" value="Simple Dark Theme" checked>
+                <label for="simple-dark">Dark</label>
+                <!--<input type="color" id="color-select">-->
+            </form>
+        </div>
+        <div class="w95" id="top" style="display: none;max-width: fit-content;">
             <div id="stats">
                 <p id="time">--</p>
                 <p id="difficulty"></p>
@@ -14,36 +23,78 @@
                 <p id="m">Mines</p>
             </div>
             <div id="options">
-                <div class="switch">
+                <div id="help">
+                    <div id="h">
+                        <div id="close-h">&#215;</div>
+                        <h2>Controls</h2>
+                        <div style="display: flex; flex-flow: row nowrap; justify-content: space-around;">
+                            <div class="mouse">
+                                <div style="animation: click-help 1s ease-in-out 1s infinite alternate;"></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="mouse">
+                                <div></div>
+                                <div style="animation: click-help 1s ease-in-out 1s infinite alternate;"></div>
+                                <div></div>
+                            </div>
+                            
+                        </div>
+                        <div class="lines"></div>
+                        <div id="click-desc" style="display: flex; flex-flow: row nowrap; justify-content: space-between;">
+                            <span>Left click/Tap:<br>selected action</span>
+                            <span>Right click:<br><i>opposite</i> action</span>
+                        </div>
+                        <div style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center;">
+                            <div class="key-wrapper">
+                                <div class="key"><span>Q</span></div>
+                                <span class="k">Only Mines</span>
+                            </div>
+                            <div class="switch">
+                                <span class="slider"></span>
+                            </div>
+                            <div class="key-wrapper">
+                                <div class="key"><span>E</span></div>
+                                <span class="k">Only Flags</span>
+                            </div>
+                        </div>
+                        <div id="spacebar">
+                            <div>space</div>
+                        </div>
+                        <span class="k">quick toggle</span>
+                    </div>
+                    <span id="hover">?</span>
+                </div>
+                <div class="switch" id="click-toggle">
                     <input type="checkbox" id="toggle" name="click-toggle">
-                    <span id="slider"></span>
+                    <label class="slider"></label>
                 </div>
             </div>
         </div>
-        <main class="w95" style="display: none;">
+        <main style="display: none;">
             <div id="game-frame"></div>
         </main>
         <div id="menu">
             <div class="w95"id="new-game">
                 <form style="padding:10px;">
                     <input type="radio" id="easy" name="difficulty" value="Easy">
-                    <label for="easy">Easy</label><br>
+                    <label for="easy">Easy</label>
                     <input type="radio" id="medium" name="difficulty" value="Medium">
-                    <label for="medium">Medium</label><br>
+                    <label for="medium">Medium</label>
                     <input type="radio" id="hard" name="difficulty" value="Hard">
-                    <label for="hard">Hard</label><br>
+                    <label for="hard">Hard</label>
                     <input type="radio" id="custom" name="difficulty" value="Custom">
                     <label for="custom">Custom</label><br>
                     <div>
                         <div>
                             <div id="dw">
                                 <label for="width">Width:</label>
-                                <input type="number" id="width" name="width" min="3" max="800" value="18" disabled>
+                                <input type="number" id="width" name="width" min="3" max="100" value="18" disabled>
                             </div>
                             <label id="x">&#215;</label>
                             <div id="dh">
                                 <label for="height">Height:</label>
-                                <input type="number" id="height" name="height" min="3" max="800" value="18" disabled>
+                                <input type="number" id="height" name="height" min="3" max="100" value="18" disabled>
                             </div>
                             <div id="s">
                                 
