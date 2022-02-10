@@ -108,6 +108,7 @@ document.getElementById("simple-dark").addEventListener("click", themeSelect);
 document.getElementById("hover").addEventListener("click", help);
 document.getElementById("close-h").addEventListener("click", closeHelp);
 document.getElementById("color-select").addEventListener("input", function(e){changeColor(e.target.value)});
+document.documentElement.addEventListener("contextmenu", function(e){e.preventDefault()});
 var cells;
 var gameStart=false;
 var alive=true;
@@ -433,21 +434,31 @@ function changeColor(color){
         color2 = "#" + Number(r - r2).toString(16) + Number(g - g2).toString(16) + Number(b - b2).toString(16);
         root.style.setProperty("--dark-1", color2);
         color2 = "#" + Number(r - r2).toString(16) + Number(g - g2).toString(16) + Number(b - b2).toString(16);
-        root.style.setProperty("--dark-1", color2); /*for sat, needs to decrease the two smaller values */
+        root.style.setProperty("--dark-1", color2);
         var rnorm = 0;
         var gnorm = 0;
         var bnorm = 0;
-        switch(Math.max(r, g, b)){
+        if(!(r == g == b)){
+            switch(Math.max(r, g, b)){
             case r:
+                g2 = Math.floor(g2 * 0.7);
+                b2 = Math.floor(b2 * 0.7);
                 rnorm = 7;
                 break;
             case g:
+                r2 = Math.floor(r2 * 0.7);
+                b2 = Math.floor(b2 * 0.7);
                 gnorm = 7;
                 break;
             case b:
+                r2 = Math.floor(r2 * 0.8);
+                g2 = Math.floor(g2 * 0.8);
                 bnorm = 7;
                 break;
+            }
         }
+        color2 = "#" + Number(r - r2).toString(16) + Number(g - g2).toString(16) + Number(b - b2).toString(16);
+        root.style.setProperty("--dark-1-sat", color2);
         r2 = Math.floor(r * (((255-r)/255)+1) - rnorm);
         g2 = Math.floor(g * (((255-g)/255)+1) - gnorm);
         b2 = Math.floor(b * (((255-b)/255)+1) - bnorm);
@@ -455,5 +466,10 @@ function changeColor(color){
         root.style.setProperty("--light-2", color2);
         color2 = "#" + Number(r2 - (r2 - r)).toString(16) + Number(g2 - (g2 - g)).toString(16) + Number(b2 - (b2 - b)).toString(16);
         root.style.setProperty("--light-1", color2);
+        r2 = Math.floor(r2 - (r2 - r) * ((r/255) * 0.6));
+        g2 = Math.floor(g2 - (g2 - g) * ((g/255) * 0.6));
+        b2 = Math.floor(b2 - (b2 - b) * ((b/255) * 0.6));
+        color2 = "#" + Number(r2 - rnorm).toString(16) + Number(g2 - gnorm).toString(16) + Number(b2 - bnorm).toString(16);
+        root.style.setProperty("--light-3", color2);
     }
 }

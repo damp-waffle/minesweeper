@@ -64,6 +64,7 @@ main{
     background-origin:border-box;
     text-align: center;
     transition: border-radius 200ms, transform 200ms, background-color 100ms;
+    cursor: pointer;
 }
 #game-frame div.covered{
     background-color: var(--main-color);
@@ -80,6 +81,7 @@ main{
 #game-frame div.uncovered{
     background-color: var(--dark-3);
     border: 1px var(--dark-2) solid;
+    cursor: default;
 }
 #top{
     display:flex;
@@ -179,6 +181,9 @@ button{
     color: var(--dark-3);
     margin: 0 auto;
     font-size: 1.15em;
+}
+button:enabled{
+    cursor: pointer;
 }
 input[type=radio]:checked + label{
     background-color: var(--dark-3);
@@ -501,11 +506,10 @@ button:disabled{
 @media only screen and (hover:hover), (min-width:601px){
     #game-frame .covered:hover{
         background-color: var(--dark-1);
-        cursor: pointer;
     }
     #game-frame .flagged:hover{
         background-color: var(--dark-1-sat);
-        cursor: pointer;
+        transform: scale(100%);
     }
     #help:hover{
         background-color:var(--dark-2);
