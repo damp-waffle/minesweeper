@@ -168,7 +168,7 @@ input[type=radio]{
 input[type=radio] + label{
     border: 1px var(--dark-2) solid;
     background-color: var(--dark-2);
-    color: var(--light-2);
+    color: var(--light-3);
     display:block;
     margin: 0 auto;
     max-width: 100px;
@@ -187,7 +187,7 @@ button:enabled{
 }
 input[type=radio]:checked + label{
     background-color: var(--dark-3);
-    color: var(--main-color);
+    color: var(--light-1);
 }
 #toggle{
     opacity:0;
@@ -202,7 +202,7 @@ input[type=radio]:checked + label{
     
 }
 #toggle:checked + .slider{
-    background-color: #EC6B74;
+    background-color: var(--main-color);
     
 }
 .switch{
@@ -260,7 +260,7 @@ button:disabled{
 #time{
     padding: 5px;
     background-color: var(--dark-2);
-    color:var(--light-1);
+    color:var(--light-2);
     border: 1px var(--dark-4) solid;
     font-weight: 700;
     font-size: 2em;
@@ -276,7 +276,7 @@ button:disabled{
 #h{
     position:absolute;
     left:50%;
-    bottom:-250px;
+    top:35px;
     display:flex;
     flex-flow: column nowrap;
     justify-content: space-between;
@@ -285,7 +285,7 @@ button:disabled{
     visibility: hidden;
     opacity:0;
     background-color: var(--dark-2);
-    color:var(--main-color);
+    color:var(--light-1);
     z-index: 1;
     transition: 500ms;
     padding:10px 5px;
@@ -325,7 +325,7 @@ button:disabled{
 }
 #h h2{
     font-size: 16px;
-    color:var(--main-color);
+    color:var(--light-2);
 }
 #help .slider{
     width: 60px;
@@ -387,9 +387,9 @@ button:disabled{
 .lines{
     position:absolute;
     left:50%;
-    top:25%;
+    top:20%;
     border-left: 2px var(--main-color) dashed;
-    height:120px;
+    height:165px;
     width: 2px;
 }
 .lines::before{
@@ -403,8 +403,8 @@ button:disabled{
     border-top:2px var(--main-color) dashed;
 }
 #click-desc span, .k{
-    color:var(--main-color);
-    font-size: 8pt;
+    color:var(--light-2);
+    font-size: 12pt;
     font-weight: lighter;
     
 }
