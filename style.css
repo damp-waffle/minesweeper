@@ -8,8 +8,7 @@
 :root{
     --border: none;
     --div-top: none;
-    --cell-border: 1px #673A3D solid;
-    --empty-border: 1px #673A3D solid;
+    
     --light-3:#f7ecec;
     --light-2:#FEDCDE;
     --light-1:#F5A4A9;
@@ -80,7 +79,7 @@ main{
 }
 #game-frame div.uncovered{
     background-color: var(--dark-3);
-    border:var(--cell-border);
+    border: 1px var(--dark-2) solid;
 }
 #top{
     display:flex;
@@ -166,17 +165,18 @@ input[type=radio]{
 }
 input[type=radio] + label{
     border: 1px var(--dark-2) solid;
-    background-color: var(--dark-1);
-    color: var(--light-3);
-    display:block;
-    margin: 0;
-    max-width: 100px;
-    padding: 5px;
-}
-button{
     background-color: var(--dark-2);
     color: var(--light-2);
+    display:block;
+    margin: 0 auto;
+    max-width: 100px;
+    padding: 5px;
+    text-align: center;
+}
+button{
     border: 1px var(--dark-2) solid;
+    background-color: var(--light-2);
+    color: var(--dark-3);
     margin: 0 auto;
     font-size: 1.15em;
 }
@@ -511,15 +511,16 @@ button:disabled{
         background-color:var(--dark-2);
         color:var(--main-color);
     }
+    input:enabled, input:enabled + label{
+        cursor: pointer;
+    }
     #click-toggle .slider:hover{
         box-shadow: 0 0 4px var(--dark-2);
     }
     input[type=radio]:hover + label{
-        cursor: pointer;
         box-shadow: 0 0 4px var(--dark-2);
     }
     button:enabled:hover{
-        cursor: pointer;
         box-shadow: 0 0 4px var(--dark-2);
     }
     #help:hover #h, #help:hover #h::before, #help:hover #h::after{

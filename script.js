@@ -107,7 +107,7 @@ document.getElementById("simple-light").addEventListener("click", themeSelect);
 document.getElementById("simple-dark").addEventListener("click", themeSelect);
 document.getElementById("hover").addEventListener("click", help);
 document.getElementById("close-h").addEventListener("click", closeHelp);
-/*document.getElementById("color-select").addEventListener("input", function(e){changeColor(e.target.value)});*/
+document.getElementById("color-select").addEventListener("input", function(e){changeColor(e.target.value)});
 var cells;
 var gameStart=false;
 var alive=true;
@@ -404,15 +404,11 @@ function clickToggle(e){
 function themeSelect(){
     var r = document.querySelector(':root');
     if(document.getElementById("simple-light").checked){
-        r.style.setProperty("--dark-3", "#F0EAD6");
-        r.style.setProperty("--dark-2", "#EEBDB3");
-        r.style.setProperty("--outline", "#bb4a51");
+        
         
     }
     else if(document.getElementById("simple-dark").checked){
-        r.style.setProperty("--dark-3", "#202020");
-        r.style.setProperty("--dark-2", "#673A3D");
-        r.style.setProperty("--outline", "black");
+     
     }
 }
 function help(){
@@ -424,7 +420,40 @@ function closeHelp(){
 }
 function changeColor(color){
     if(document.getElementById("simple-light").checked || document.getElementById("simple-dark").checked){
-        var r = document.querySelector(':root');
-        r.style.setProperty("--main-color", color);
+        var root = document.querySelector(':root');
+        root.style.setProperty("--main-color", color);
+        var r = parseInt(color.substring(1, 3), 16);
+        var g = parseInt(color.substring(3, 5), 16);
+        var b = parseInt(color.substring(5, 7), 16);
+        var r2 = Math.floor(r * 0.48);
+        var g2 = Math.floor(g * 0.48);
+        var b2 = Math.floor(b * 0.48);
+        color2 = "#" + Number(r2).toString(16) + Number(g2).toString(16) + Number(b2).toString(16);
+        root.style.setProperty("--dark-2", color2);
+        color2 = "#" + Number(r - r2).toString(16) + Number(g - g2).toString(16) + Number(b - b2).toString(16);
+        root.style.setProperty("--dark-1", color2);
+        color2 = "#" + Number(r - r2).toString(16) + Number(g - g2).toString(16) + Number(b - b2).toString(16);
+        root.style.setProperty("--dark-1", color2); /*for sat, needs to decrease the two smaller values */
+        var rnorm = 0;
+        var gnorm = 0;
+        var bnorm = 0;
+        switch(Math.max(r, g, b)){
+            case r:
+                rnorm = 7;
+                break;
+            case g:
+                gnorm = 7;
+                break;
+            case b:
+                bnorm = 7;
+                break;
+        }
+        r2 = Math.floor(r * (((255-r)/255)+1) - rnorm);
+        g2 = Math.floor(g * (((255-g)/255)+1) - gnorm);
+        b2 = Math.floor(b * (((255-b)/255)+1) - bnorm);
+        color2 = "#" + Number(r2).toString(16) + Number(g2).toString(16) + Number(b2).toString(16);
+        root.style.setProperty("--light-2", color2);
+        color2 = "#" + Number(r2 - (r2 - r)).toString(16) + Number(g2 - (g2 - g)).toString(16) + Number(b2 - (b2 - b)).toString(16);
+        root.style.setProperty("--light-1", color2);
     }
 }
