@@ -105,9 +105,12 @@ document.getElementsByTagName("main")[0].addEventListener("mouseout", function()
 document.documentElement.addEventListener("keydown", function(e){clickToggle(e.code)})
 document.getElementById("simple-light").addEventListener("click", themeSelect);
 document.getElementById("simple-dark").addEventListener("click", themeSelect);
-document.getElementById("hover").addEventListener("click", help);
+document.getElementsByClassName("hover")[0].addEventListener("click", help);
+/*document.getElementsByClassName("hover")[1].addEventListener("click", settings);*/
 document.getElementById("close-h").addEventListener("click", closeHelp);
 document.getElementById("color-select").addEventListener("input", function(e){changeColor(e.target.value)});
+document.getElementsByClassName("control-thing")[0].addEventListener("click", function(){rebind(1)});
+document.getElementsByClassName("control-thing")[1].addEventListener("click", function(){rebind(2)});
 document.documentElement.addEventListener("contextmenu", function(e){e.preventDefault()});
 var cells;
 var gameStart=false;
@@ -120,6 +123,8 @@ var interval;
 var uncoveredTiles;
 var currentCell = "";
 var clickMine = true;
+var mineKey = "KeyQ";
+var flagKey = "KeyE";
 const numColorSet=["blue", "green", "red", "purple", "maroon", "turquoise","black","gray"];
 
 function start(){
@@ -385,7 +390,7 @@ function clickToggle(e){
             clickMine = true;
         }
     }
-    else if(e=="KeyQ"){
+    else if(e==mineKey){
         if(clickMine){
             currentCell.click();
         }
@@ -393,7 +398,7 @@ function clickToggle(e){
             currentCell.dispatchEvent(new Event("contextmenu"));
         }
     }
-    else if(e=="KeyE"){
+    else if(e==flagKey){
         if(clickMine){
             currentCell.dispatchEvent(new Event("contextmenu"));
         }
@@ -471,5 +476,52 @@ function changeColor(color){
         b2 = Math.floor(b2 - (b2 - b) * ((b/255) * 0.6));
         color2 = "#" + Number(r2 - rnorm).toString(16) + Number(g2 - gnorm).toString(16) + Number(b2 - bnorm).toString(16);
         root.style.setProperty("--light-3", color2);
+    }
+}
+/*function settings(){
+    var s = document.getElementById("s-menu");
+    if(s.style.visibility="hidden"){
+        s.style.visibility="visible";
+        s.style.opacity="100%";
+    }
+    else{
+        s.style.visibility="hidden";
+        s.style.opacity="0%";
+    }
+}*/
+function rebind(type){
+    var newKey = "";
+    switch(type){
+        case 1:
+            document.getElementById("mine-key").innerHTML = "Press new key"
+            document.documentElement.addEventListener("keydown", function(e){
+                newKey=e.code;
+                mineKey=newKey;
+                document.getElementsByTagName("body")[0].disabled=false;
+                document.getElementById("mine-key").innerHTML = "(click to rebind)";
+                shortKey = newKey.charAt(newKey.length - 1);
+                document.getElementById("cm-key").innerHTML = shortKey;
+                document.getElementsByClassName("key")[0].children[0].innerHTML = shortKey;
+                document.documentElement.removeEventListener("keydown", arguments.callee);
+            })
+            document.getElementsByTagName("body")[0].disabled=true;
+            /*need to disable other elements while rebinding*/
+            break;
+        case 2:
+            document.getElementById("flag-key").innerHTML = "Press new key"
+            document.documentElement.addEventListener("keydown", function(e){
+                newKey=e.code;
+                flagKey=newKey;
+                document.getElementsByTagName("body")[0].disabled=false;
+                document.getElementById("flag-key").innerHTML = "(click to rebind)";
+                shortKey = newKey.charAt(newKey.length - 1);
+                document.getElementById("cf-key").innerHTML = shortKey;
+                document.getElementsByClassName("key")[1].children[0].innerHTML = shortKey;
+                document.documentElement.removeEventListener("keydown", arguments.callee);
+            })
+            document.getElementsByTagName("body")[0].disabled=true;
+            break;
+        case 3:
+            break;
     }
 }

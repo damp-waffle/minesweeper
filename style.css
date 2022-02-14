@@ -189,7 +189,8 @@ input[type=radio]:checked + label{
     background-color: var(--dark-3);
     color: var(--main-color);
 }
-#toggle{
+input[type=checkbox]{
+    position: absolute;
     opacity:0;
     height: 0;
     width: 0;
@@ -273,6 +274,9 @@ button:disabled{
     background-color: var(--dark-2);
     z-index: 2;
 }
+#settings{
+    position:relative;
+}
 #h{
     position:absolute;
     left:50%;
@@ -344,7 +348,7 @@ button:disabled{
     background-color: var(--main-color);
 }
 
-#help{
+#help, #settings{
     position:relative;
     border-radius: 50%;
     border: 3px var(--dark-2) solid;
@@ -452,13 +456,50 @@ button:disabled{
     border-radius: 2px;
 }
 .key-wrapper{
-    display:flex;
+    display:inline-flex;
     flex-direction: column;
     align-items: center;
 }
 .k{
     margin-top:4px;
 }
+#settings label{
+    cursor: pointer;
+}
+#s-menu{
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    visibility: hidden;
+    opacity:0;
+    background-color: var(--dark-2);
+    color: var(--main-color);
+    padding:1em;
+}
+#s-click:checked + #s-menu{
+    visibility: visible;
+    opacity: 100%;
+}
+.control-thing{
+    display:inline-grid;
+    grid-template-areas: auto auto / auto auto;
+    cursor: pointer;
+}
+.control-thing span:first-child{
+    grid-area: 1 / 1 / 2 / 2;
+}
+.control-thing .key{
+    grid-area: 1 / 2 / 2 / 3;
+}
+.control-thing .k{
+    grid-area: 2 / 1 / 3 / 3;
+    margin-top: 2px;
+}
+.control-thing:hover{
+    text-decoration: dotted underline;
+}
+
 @keyframes slider-ex-b {
     0%{transform:none;}
     45%{transform:none;}
@@ -511,7 +552,7 @@ button:disabled{
         background-color: var(--dark-1-sat);
         transform: scale(100%);
     }
-    #help:hover{
+    #help:hover, #settings:hover{
         background-color:var(--dark-2);
         color:var(--main-color);
     }
@@ -580,5 +621,8 @@ button:disabled{
         height: 20px;
         width:20px;
         color:var(--main-color);
+    }
+    .control-thing{
+        display:none;
     }
 }

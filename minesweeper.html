@@ -23,47 +23,72 @@
                 <p id="m">Mines</p>
             </div>
             <div id="options">
-                <div id="help">
-                    <div id="h">
-                        <div id="close-h">&#215;</div>
-                        <h2>Controls</h2>
-                        <div style="display: flex; flex-flow: row nowrap; justify-content: space-around;">
-                            <div class="mouse">
-                                <div style="animation: click-help 1s ease-in-out 1s infinite alternate;"></div>
-                                <div></div>
-                                <div></div>
+                <div style="display:flex">
+                    <div id="help">
+                        <div id="h">
+                            <div id="close-h">&#215;</div>
+                            <h2>Controls</h2>
+                            <div style="display: flex; flex-flow: row nowrap; justify-content: space-around;">
+                                <div class="mouse">
+                                    <div style="animation: click-help 1s ease-in-out 1s infinite alternate;"></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="mouse">
+                                    <div></div>
+                                    <div style="animation: click-help 1s ease-in-out 1s infinite alternate;"></div>
+                                    <div></div>
+                                </div>
+                                
                             </div>
-                            <div class="mouse">
-                                <div></div>
-                                <div style="animation: click-help 1s ease-in-out 1s infinite alternate;"></div>
-                                <div></div>
+                            <div class="lines"></div>
+                            <div id="click-desc" style="display: flex; flex-flow: row nowrap; justify-content: space-between;">
+                                <span>Left click/Tap:<br>selected action</span>
+                                <span>Right click:<br><i>opposite</i> action</span>
                             </div>
-                            
+                            <div style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center;">
+                                <div class="key-wrapper">
+                                    <div class="key"><span>Q</span></div>
+                                    <span class="k">Only Mines</span>
+                                </div>
+                                <div class="switch">
+                                    <span class="slider"></span>
+                                </div>
+                                <div class="key-wrapper">
+                                    <div class="key"><span>E</span></div>
+                                    <span class="k">Only Flags</span>
+                                </div>
+                            </div>
+                            <div id="spacebar">
+                                <div>space</div>
+                            </div>
+                            <span class="k">quick toggle</span>
                         </div>
-                        <div class="lines"></div>
-                        <div id="click-desc" style="display: flex; flex-flow: row nowrap; justify-content: space-between;">
-                            <span>Left click/Tap:<br>selected action</span>
-                            <span>Right click:<br><i>opposite</i> action</span>
-                        </div>
-                        <div style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center;">
-                            <div class="key-wrapper">
-                                <div class="key"><span>Q</span></div>
-                                <span class="k">Only Mines</span>
-                            </div>
-                            <div class="switch">
-                                <span class="slider"></span>
-                            </div>
-                            <div class="key-wrapper">
-                                <div class="key"><span>E</span></div>
-                                <span class="k">Only Flags</span>
-                            </div>
-                        </div>
-                        <div id="spacebar">
-                            <div>space</div>
-                        </div>
-                        <span class="k">quick toggle</span>
+                        <span class="hover">?</span>
                     </div>
-                    <span id="hover">?</span>
+                    <div id="settings">
+                        <label for="s-click" class="hover" style="line-height:.75;">&#9965;</label>
+                        <input id="s-click" type="checkbox">
+                        <div id="s-menu">
+                            <div class="control-thing">
+                                <span>Mine:</span>
+                                <div class="key"><span id="cm-key">Q</span></div>
+                                <span id="mine-key" class="k">(click to rebind)</span>
+                            </div>
+                            <div class="control-thing">
+                                <span>Flag:</span>
+                                <div class="key"><span id="cf-key">E</span></div>
+                                <span id="flag-key" class="k">(click to rebind)</span>
+                            </div>
+                            <div>Quick Toggle: 
+                                <div id="spacebar">
+                                    <div>space</div>
+                                    <span class="k">(click to rebind)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
                 <div class="switch" id="click-toggle">
                     <input type="checkbox" id="toggle" name="click-toggle">
