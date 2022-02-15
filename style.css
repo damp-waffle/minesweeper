@@ -524,10 +524,11 @@ button:disabled{
     display:flex;
     justify-content: space-between;
     height:fit-content;
+    padding-left:26px;
 }
 #grid-toggle label{
     position:relative;
-    margin-left:-26px;
+    
 }
 #grid-toggle label::before{
     content:"";
@@ -553,6 +554,10 @@ button:disabled{
 #s-click-label{
     display:inline-block;
     line-height: 5px;
+}
+#buttons{
+    display: flex;
+    flex-direction: row;
 }
 
 @keyframes slider-ex-b {
@@ -685,5 +690,14 @@ button:disabled{
     }
     #controls{
         display:none;
+    }
+    #buttons{
+        flex-direction: column;
+    }
+    #s-menu{
+        justify-content: center;
+    }
+    #help, #settings{
+        margin: 3px 0;
     }
 }
