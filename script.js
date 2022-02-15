@@ -71,7 +71,7 @@ class Cell{
             }
         }
         else{
-            this.div.style.border="";
+            this.div.removeAttribute("style");
         }
         this.edge();
     }
@@ -85,7 +85,7 @@ class Cell{
         if(this.y == 0){
             this.div.style.borderLeft="none";
         }
-        if(this.y == rows - 1){
+        else if(this.y == rows - 1){
             this.div.style.borderRight="none";
         }
     }
@@ -108,9 +108,12 @@ document.getElementById("simple-dark").addEventListener("click", themeSelect);
 document.getElementsByClassName("hover")[0].addEventListener("click", help);
 /*document.getElementsByClassName("hover")[1].addEventListener("click", settings);*/
 document.getElementById("close-h").addEventListener("click", closeHelp);
+document.getElementById("help").addEventListener("mouseout", closeHelp);
 document.getElementById("color-select").addEventListener("input", function(e){changeColor(e.target.value)});
 document.getElementsByClassName("control-thing")[0].addEventListener("click", function(){rebind(1)});
 document.getElementsByClassName("control-thing")[1].addEventListener("click", function(){rebind(2)});
+document.getElementById("grid").addEventListener("input", gridToggle);
+document.getElementById("s-click").addEventListener("input", settingsBlock);
 document.documentElement.addEventListener("contextmenu", function(e){e.preventDefault()});
 var cells;
 var gameStart=false;
@@ -125,7 +128,8 @@ var currentCell = "";
 var clickMine = true;
 var mineKey = "KeyQ";
 var flagKey = "KeyE";
-const numColorSet=["blue", "green", "red", "purple", "maroon", "turquoise","black","gray"];
+/*const numColorSet=["blue", "green", "red", "purple", "maroon", "turquoise","black","gray"];*/
+var gridDisplay = false;
 
 function start(){
     document.getElementById("menu").style.display = "none";
@@ -178,6 +182,7 @@ function start(){
             c = new Cell(i, j);
             cells[i].push(c);
             document.getElementById("game-frame").appendChild(cells[i][j].div);
+            cells[i][j].edge();
         }
     }
     uncoveredTiles = 0;
@@ -195,7 +200,7 @@ function start(){
 }
 
 function trigger(i, j, mb, adj = 0){
-    if(alive){
+    if(alive && document.getElementById("game-frame").getAttribute("paused")=="false"){
         if(gameStart){
             if(cells[i][j].uncovered === false){
                 if(mb){
@@ -361,7 +366,6 @@ function clear(){
     while(b.firstChild){
         b.removeChild(b.firstChild);
     }
-    console.log(cells);
 }
 function tick(){
     seconds++;
@@ -499,32 +503,75 @@ function rebind(type){
             document.getElementById("mine-key").innerHTML = "Press new key"
             document.documentElement.addEventListener("keydown", function(e){
                 newKey=e.code;
-                mineKey=newKey;
-                document.getElementsByTagName("body")[0].disabled=false;
-                document.getElementById("mine-key").innerHTML = "(click to rebind)";
-                shortKey = newKey.charAt(newKey.length - 1);
-                document.getElementById("cm-key").innerHTML = shortKey;
-                document.getElementsByClassName("key")[0].children[0].innerHTML = shortKey;
-                document.documentElement.removeEventListener("keydown", arguments.callee);
+                if(newKey == flagKey){
+                    alert("Key is already in use!");
+                    document.getElementById("s-click").disabled=false;
+                    document.getElementById("mine-key").innerHTML = "(click to rebind)";
+                }
+                else{
+                    mineKey=newKey;
+                    document.getElementById("s-click").disabled=false;
+                    document.getElementById("mine-key").innerHTML = "(click to rebind)";
+                    shortKey = newKey.charAt(newKey.length - 1);
+                    document.getElementById("cm-key").innerHTML = shortKey;
+                    document.getElementsByClassName("key")[0].children[0].innerHTML = shortKey;
+                    document.documentElement.removeEventListener("keydown", arguments.callee);
+                }
             })
-            document.getElementsByTagName("body")[0].disabled=true;
-            /*need to disable other elements while rebinding*/
+            document.getElementById("s-click").disabled=true;
             break;
         case 2:
             document.getElementById("flag-key").innerHTML = "Press new key"
             document.documentElement.addEventListener("keydown", function(e){
                 newKey=e.code;
-                flagKey=newKey;
-                document.getElementsByTagName("body")[0].disabled=false;
-                document.getElementById("flag-key").innerHTML = "(click to rebind)";
-                shortKey = newKey.charAt(newKey.length - 1);
-                document.getElementById("cf-key").innerHTML = shortKey;
-                document.getElementsByClassName("key")[1].children[0].innerHTML = shortKey;
-                document.documentElement.removeEventListener("keydown", arguments.callee);
+                if(newKey == mineKey){
+                    alert("Key is already in use!");
+                    document.getElementById("s-click").disabled=false;
+                    document.getElementById("flag-key").innerHTML = "(click to rebind)";
+                }
+                else{
+                    flagKey=newKey;
+                    document.getElementById("s-click").disabled=false;
+                    document.getElementById("flag-key").innerHTML = "(click to rebind)";
+                    shortKey = newKey.charAt(newKey.length - 1);
+                    document.getElementById("cf-key").innerHTML = shortKey;
+                    document.getElementsByClassName("key")[1].children[0].innerHTML = shortKey;
+                    document.documentElement.removeEventListener("keydown", arguments.callee);
+                }
             })
-            document.getElementsByTagName("body")[0].disabled=true;
+            document.getElementById("s-click").disabled=true;
             break;
         case 3:
             break;
     }
+}
+function gridToggle(){
+    if(document.getElementById("grid").checked){
+        gridDisplay = true;
+        document.getElementById("game-frame").setAttribute("gridded", "true");
+    }
+    else{
+        gridDisplay = false;
+        document.getElementById("game-frame").setAttribute("gridded", "false");
+    }
+}
+function settingsBlock(){
+    if(document.getElementById("s-click").checked){
+        document.getElementById("game-frame").setAttribute("paused", "true");
+        document.getElementById("s-click-label").style = "transform: rotate(270deg);";
+        document.getElementById("settings").style = "color: var(--main-color); background-color: var(--dark-2);";
+        if(gameStart){
+            clearInterval(interval);
+        }
+        
+    }
+    else{
+        document.getElementById("game-frame").setAttribute("paused", "false");
+        document.getElementById("s-click-label").removeAttribute("style");
+        document.getElementById("settings").removeAttribute("style");
+        if(gameStart){
+            interval = setInterval(tick, 1000);
+        }
+    }
+    document.getElementById("s-click").blur();
 }

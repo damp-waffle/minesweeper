@@ -67,24 +67,27 @@
                         <span class="hover">?</span>
                     </div>
                     <div id="settings">
-                        <label for="s-click" class="hover" style="line-height:.75;">&#9965;</label>
+                        
+                        <label for="s-click" id="s-click-label" class="hover" style="line-height:.75;" tabindex="-1">&#9965;</label>
                         <input id="s-click" type="checkbox">
                         <div id="s-menu">
-                            <div class="control-thing">
-                                <span>Mine:</span>
-                                <div class="key"><span id="cm-key">Q</span></div>
-                                <span id="mine-key" class="k">(click to rebind)</span>
-                            </div>
-                            <div class="control-thing">
-                                <span>Flag:</span>
-                                <div class="key"><span id="cf-key">E</span></div>
-                                <span id="flag-key" class="k">(click to rebind)</span>
-                            </div>
-                            <div>Quick Toggle: 
-                                <div id="spacebar">
-                                    <div>space</div>
-                                    <span class="k">(click to rebind)</span>
+                            <h2>Settings</h2>
+                            <fieldset id="controls">
+                                <legend>Controls</legend>
+                                <div class="control-thing">
+                                    <span>Mine:</span>
+                                    <div class="key"><span id="cm-key">Q</span></div>
+                                    <span id="mine-key" class="k">(click to rebind)</span>
                                 </div>
+                                <div class="control-thing">
+                                    <span>Flag:</span>
+                                    <div class="key"><span id="cf-key">E</span></div>
+                                    <span id="flag-key" class="k">(click to rebind)</span>
+                                </div>
+                            </fieldset>
+                            <div id="grid-toggle">
+                                <input id="grid" type="checkbox">
+                                <label for="grid">Full Grid Overlay</label>
                             </div>
                         </div>
                         
@@ -97,7 +100,7 @@
             </div>
         </div>
         <main style="display: none;">
-            <div id="game-frame"></div>
+            <div id="game-frame" paused="false"></div>
         </main>
         <div id="menu">
             <div class="w95"id="new-game">
