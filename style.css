@@ -23,8 +23,8 @@ body{
     background:var(--dark-3);
 }
 #indicator{
-    height: 30px;
-    width: 30px;
+    height: 60px;
+    width: 60px;
     position: fixed;
     display:flex;
     align-items: center;
@@ -33,17 +33,17 @@ body{
     background-color:var(--main-color);
     border-radius:50%;
     border: 2px var(--dark-2) solid;
-    transition: opacity 500ms;
+    transition: opacity 500ms ease-in;
     z-index: 3;
 }
 #indicator-inner{
-    height: 19px;
-    width: 19px;
+    height: 35px;
+    width: 35px;
     background-color: var(--light-1);
     border-radius: 50%;
     background-image: url(sprites.png);
-    background-size: calc(19px * 2) 19px;
-    background-position: -19px 0;
+    background-size: calc(35px * 2) 35px;
+    background-position: -35px 0;
     z-index: 5;
 }
 #indicator-progress{
@@ -144,6 +144,9 @@ main{
     background-color: var(--dark-3);
     border: 1px var(--dark-2) solid;
     cursor: default;
+}
+#game-frame div.held{
+    background-color: var(--light-1);
 }
 #top{
     display:flex;

@@ -276,18 +276,18 @@ function trigger(i, j, mb, adj = 0){
 function touchStart(x, y, elem, elemCL){
     currentCell = elem;
     if( (! (elemCL.contains("uncovered"))) && gameStart){
-        indicator.style.left = String(x - 14) + "px";
-        indicator.style.top = String(y - 45) + "px";
+        indicator.style.left = String(x - 30) + "px";
+        indicator.style.top = String(y - 100) + "px";
         indicator.style.opacity = "100%";
-        
-        held = setInterval(function(){if(touchHeld < 360){touchHeld++;} heldRotation();}, 2);
+        elem.classList.add("held");
+        held = setInterval(function(){if(touchHeld < 360){touchHeld+=2;} heldRotation();}, 5);
     }
 }
 function touchRelease(){
     clearInterval(held);
     indicator.style.transition = "opacity 100ms";
     indicator.style.opacity = "0%";
-    
+    currentCell.classList.remove("held");
     if(touchHeld > 355){
         currentCell.dispatchEvent(new Event("contextmenu"));
     }
@@ -296,7 +296,9 @@ function touchRelease(){
     }
     touchHeld = 0;
     setTimeout(function(){
-        indicator.style.transition = "opacity 500ms";
+        indicator.style.transition = "opacity 500ms ease-in";
+        indicator.style.top = "0";
+        indicator.style.left = "-100%";
         indicator_prog.style.clipPath = "polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)";
     }, 200)
 }
