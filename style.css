@@ -22,6 +22,58 @@
 body{
     background:var(--dark-3);
 }
+#indicator{
+    height: 30px;
+    width: 30px;
+    position: fixed;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    opacity:0%;
+    background-color:var(--main-color);
+    border-radius:50%;
+    border: 2px var(--dark-2) solid;
+    transition: opacity 500ms;
+    z-index: 3;
+}
+#indicator-inner{
+    height: 19px;
+    width: 19px;
+    background-color: var(--light-1);
+    border-radius: 50%;
+    background-image: url(sprites.png);
+    background-size: calc(19px * 2) 19px;
+    background-position: -19px 0;
+    z-index: 5;
+}
+#indicator-progress{
+    position:absolute;
+    height: 100%;width:100%;
+    background-color: var(--dark-1);
+    border-radius: 50%;
+    clip-path: polygon(50% 0%, 50% 50%, 50% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%);
+    z-index: 4;
+    /* animation: progress linear 2s infinite; */
+}
+@keyframes progress{
+    0%{clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);} /*0deg*/
+    8.25%{clip-path: polygon(50% 0%, 50% 50%, 75% 6.699%, 100% 6.699%, 100% 100%, 0% 100%, 0% 0%);} /*30deg*/
+    12.5%{clip-path: polygon(50% 0%, 50% 50%, 85.355% 14.645%, 100% 14.645%, 100% 100%, 0% 100%, 0% 0%);} /*45deg*/
+    16.75%{clip-path: polygon(50% 0%, 50% 50%, 93.301% 25%, 100% 25%, 100% 100%, 0% 100%, 0% 0%);} /*60deg*/
+    25%{clip-path: polygon(50% 0%, 50% 50%, 100% 50%, 100% 100%, 0% 100%, 0% 0%);}/*90deg*/
+    33.25%{clip-path: polygon(50% 0%, 50% 50%, 93.301% 75%, 100% 75%, 100% 100%, 0% 100%, 0% 0%);}/*120deg*/
+    37.5%{clip-path: polygon(50% 0%, 50% 50%, 85.355% 85.355%, 85.355% 100%, 0% 100%, 0% 0%);} /*135deg*/
+    41.75%{clip-path: polygon(50% 0%, 50% 50%, 75% 93.301%, 75% 100%, 0% 100%, 0% 0%);} /*150deg*/
+    50%{clip-path: polygon(50% 0%, 50% 50%, 50% 100%, 0% 100%, 0% 0%);} /*180deg*/
+    58.25%{clip-path: polygon(50% 0%, 50% 50%, 25% 93.301%, 0% 93.301%, 0% 100%, 0% 0%);} /*210deg*/
+    62.5%{clip-path: polygon(50% 0%, 50% 50%, 14.645% 85.355%, 0% 100%, 0% 0%);}/*225deg*/
+    66.75%{clip-path: polygon(50% 0%, 50% 50%, 6.699% 75%, 0% 75%, 0% 100%, 0% 0%);} /*240deg*/
+    75%{clip-path: polygon(50% 0%, 50% 50%, 0% 50%, 0% 0%);} /*270deg*/
+    83.25%{clip-path: polygon(50% 0%, 50% 50%, 6.699% 25%, 0% 25%, 0% 100%, 0% 0%);} /*300deg*/
+    87.5%{clip-path: polygon(50% 0%, 50% 50%, 14.645% 14.645%, 0% 0%);} /*315deg*/
+    91.75%{clip-path: polygon(50% 0%, 50% 50%, 25% 6.699%, 25% 0%, 0% 0%);} /*330deg*/
+    100%{clip-path: polygon(50% 0%, 50% 50%, 50% 50%, 50% 0%);} /*360deg*/
+}
 .w95::before{
     width:100%;
     background-color: darkblue;
@@ -112,9 +164,9 @@ main{
 }
 #menu{
     position:fixed;
-    top:50px;
+    top: 50%;
     left: 50%;
-    transform:translateX(-50%);
+    transform: translate(-50%, -50%);
     width:fit-content;
 }
 input[type=number]{
@@ -168,7 +220,10 @@ form div div{
 }
 #game-over{
     text-align: center;
-    transform: translateY(155px);
+    transform: translate(-50%, -50%);
+    position: fixed;
+    top: 40%;
+    min-width: 20vw;
 }
 input[type=radio]{
     opacity:0;
@@ -189,11 +244,14 @@ button{
     border: 1px var(--dark-2) solid;
     background-color: var(--light-2);
     color: var(--dark-3);
-    margin: 0 auto;
+    margin: 5px auto;
     font-size: 1.15em;
 }
 button:enabled{
     cursor: pointer;
+}
+#game-over form{
+    padding: 0;
 }
 input[type=radio]:checked + label{
     background-color: var(--dark-3);
@@ -260,8 +318,8 @@ input[type=checkbox]{
     border-radius: 50%;
 }
 #themes{
-    position: absolute;
-    top: 50px;
+    position: fixed;
+    top: calc(50% - 150px);
     left:0;
     
 }
@@ -559,6 +617,17 @@ button:disabled{
     display: flex;
     flex-direction: row;
 }
+header{
+    color: var(--main-color);
+    text-align: center;
+}
+header h1{
+    font-size: 60pt;
+    margin: 1em 0 0.5em;
+}
+header span{
+    color: var(--dark-1);
+}
 
 @keyframes slider-ex-b {
     0%{transform:none;}
@@ -699,5 +768,11 @@ button:disabled{
     }
     #help, #settings{
         margin: 3px 0;
+    }
+    header h1{
+        font-size: 36pt;
+    }
+    #game-over{
+        min-width: 50vw;
     }
 }

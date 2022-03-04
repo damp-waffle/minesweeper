@@ -3,9 +3,17 @@
     <head>
         <title>Minesweeper</title>
         <link rel="stylesheet" type="text/css" href="style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     </head>
     <body>
+        <!-- <div id = "indicator-debug" style="position:fixed;padding-left: 1em; background-color: white;">0</div> -->
+        <div id="indicator">
+            <div id="indicator-inner"></div>
+            <div id="indicator-progress"></div>
+          </div>
+        <header>
+            <h1>M<span>Y</span>NESWEEPER</h1>
+        </header>
         <div class="w95" id="themes">
             <form style="padding:10px;">
                 <input type="radio" id="simple-light" name="theme" value="Simple Light Theme">

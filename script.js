@@ -32,12 +32,17 @@ class Cell{
         this.div.style.border = "1px #808080 solid"*/
     }
     blow(b=true){
-        if(this.mine && b){
-            this.div.style.backgroundImage = "url(sprites.png)";
-            this.div.style.backgroundPosition = "0 0";
-            this.div.setAttribute("class","uncovered");
-        }
-        this.div.classList.remove("covered");
+        let d = this.div;
+        let m = this.mine;
+        let delay = (this.x * 6) + this.y;
+        setTimeout(function(){
+            if(m && b){
+                d.style.backgroundImage = "url(sprites.png)";
+                d.style.backgroundPosition = "0 0";
+                d.setAttribute("class","uncovered");
+                d.classList.remove("covered");
+            }           
+        }, Math.abs((15 * delay)-2));
         
     }
     flag(){
@@ -114,7 +119,9 @@ document.getElementsByClassName("control-thing")[0].addEventListener("click", fu
 document.getElementsByClassName("control-thing")[1].addEventListener("click", function(){rebind(2)});
 document.getElementById("grid").addEventListener("input", gridToggle);
 document.getElementById("s-click").addEventListener("input", settingsBlock);
-document.documentElement.addEventListener("contextmenu", function(e){e.preventDefault()});
+document.getElementById("themes").addEventListener("contextmenu", function(e){e.preventDefault()});
+document.getElementById("menu").addEventListener("contextmenu", function(e){e.preventDefault()});
+document.getElementById("top").addEventListener("contextmenu", function(e){e.preventDefault()});
 var cells;
 var gameStart=false;
 var alive=true;
@@ -128,12 +135,18 @@ var currentCell = "";
 var clickMine = true;
 var mineKey = "KeyQ";
 var flagKey = "KeyE";
+var held;
+var touchHeld = 0;
+const indicator = document.getElementById("indicator");
+const indicator_prog = document.getElementById("indicator-progress");
 /*const numColorSet=["blue", "green", "red", "purple", "maroon", "turquoise","black","gray"];*/
 var gridDisplay = false;
 
 function start(){
     document.getElementById("menu").style.display = "none";
     document.getElementById("themes").style.display="none";
+    document.getElementById("game-frame").setAttribute("paused", "false");
+    document.getElementsByTagName("header")[0].style.display="none";
     alive=true;
     if(gameStart == false){
         if(document.getElementById("easy").checked){
@@ -195,6 +208,8 @@ function start(){
             document.getElementById(cells[i][j].id).addEventListener("click", function(){trigger(x, y, clickMine)});
             document.getElementById(cells[i][j].id).addEventListener("contextmenu", function(e){e.preventDefault();trigger(x, y, !clickMine)});
             document.getElementById(cells[i][j].id).addEventListener("mouseover", function(){currentCell=d});
+            document.getElementById(cells[i][j].id).addEventListener("touchstart", function(e){ e.preventDefault(); touchStart(e.touches[0].pageX, e.touches[0].pageY, e.target, e.target.classList);});
+            document.getElementById(cells[i][j].id).addEventListener("touchend", function(e){e.preventDefault(); touchRelease();});
         }
     }
 }
@@ -204,38 +219,41 @@ function trigger(i, j, mb, adj = 0){
         if(gameStart){
             if(cells[i][j].uncovered === false){
                 if(mb){
-                    if(cells[i][j].uncover()){
-                        /*console.log(cells[i][j].id + " BOOM");*/
-                        gameOver();
-                    }
-                    else{
-                        /*console.log(cells[i][j].id + " is safe");*/
-                        let x = cells[i][j].x;
-                        let y = cells[i][j].y;
-                        let z = [];
-                        try{if(cells[x - 1][y - 1].mine){adj++;}}catch(err){} /*up left*/
-                        try{if(cells[x - 1][y].mine){adj++;}}catch(err){} /*left*/
-                        try{if(cells[x - 1][y + 1].mine){adj++;}}catch(err){} /*down left*/
-                        try{if(cells[x][y - 1].mine){adj++;}}catch(err){} /*up*/
-                        try{if(cells[x][y + 1].mine){adj++;}}catch(err){} /*down*/
-                        try{if(cells[x + 1][y - 1].mine){adj++;}}catch(err){} /*up right*/
-                        try{if(cells[x + 1][y].mine){adj++;}}catch(err){} /*right*/
-                        try{if(cells[x + 1][y + 1].mine){adj++;}}catch(err){} /*down right*/
-                        cells[i][j].setNum(adj);
-                        if(adj == 0){
-                            setTimeout(function(){
-                                try{trigger(x - 1, y - 1, true);}catch(err){}
-                                try{trigger(x - 1, y, true);}catch(err){}
-                                try{trigger(x - 1, y + 1, true);}catch(err){}
-                                try{trigger(x, y - 1, true);}catch(err){}
-                                try{trigger(x, y + 1, true);}catch(err){}
-                                try{trigger(x + 1, y - 1, true);}catch(err){}
-                                try{trigger(x + 1, y, true);}catch(err){}
-                                try{trigger(x + 1, y + 1, true);}catch(err){}}, 50)
+                    if(! cells[i][j].flagged){
+                        if(cells[i][j].uncover()){
+                            /*console.log(cells[i][j].id + " BOOM");*/
+                            cells[i][j].blow(true, 0);
+                            gameOver();
                         }
-                        uncoveredTiles++;
-                        if(uncoveredTiles == (rows*col) - mines){
-                            gameOver(false);
+                        else{
+                            /*console.log(cells[i][j].id + " is safe");*/
+                            let x = cells[i][j].x;
+                            let y = cells[i][j].y;
+                            let z = [];
+                            try{if(cells[x - 1][y - 1].mine){adj++;}}catch(err){} /*up left*/
+                            try{if(cells[x - 1][y].mine){adj++;}}catch(err){} /*left*/
+                            try{if(cells[x - 1][y + 1].mine){adj++;}}catch(err){} /*down left*/
+                            try{if(cells[x][y - 1].mine){adj++;}}catch(err){} /*up*/
+                            try{if(cells[x][y + 1].mine){adj++;}}catch(err){} /*down*/
+                            try{if(cells[x + 1][y - 1].mine){adj++;}}catch(err){} /*up right*/
+                            try{if(cells[x + 1][y].mine){adj++;}}catch(err){} /*right*/
+                            try{if(cells[x + 1][y + 1].mine){adj++;}}catch(err){} /*down right*/
+                            cells[i][j].setNum(adj);
+                            if(adj == 0){
+                                setTimeout(function(){
+                                    try{trigger(x - 1, y - 1, true);}catch(err){}
+                                    try{trigger(x - 1, y, true);}catch(err){}
+                                    try{trigger(x - 1, y + 1, true);}catch(err){}
+                                    try{trigger(x, y - 1, true);}catch(err){}
+                                    try{trigger(x, y + 1, true);}catch(err){}
+                                    try{trigger(x + 1, y - 1, true);}catch(err){}
+                                    try{trigger(x + 1, y, true);}catch(err){}
+                                    try{trigger(x + 1, y + 1, true);}catch(err){}}, 50)
+                            }
+                            uncoveredTiles++;
+                            if(uncoveredTiles == (rows*col) - mines){
+                                gameOver(false);
+                            }
                         }
                     }
                 }
@@ -254,6 +272,71 @@ function trigger(i, j, mb, adj = 0){
             generateMines(i, j);
         }
     }
+}
+function touchStart(x, y, elem, elemCL){
+    currentCell = elem;
+    if( (! (elemCL.contains("uncovered"))) && gameStart){
+        indicator.style.left = String(x - 14) + "px";
+        indicator.style.top = String(y - 45) + "px";
+        indicator.style.opacity = "100%";
+        
+        held = setInterval(function(){if(touchHeld < 360){touchHeld++;} heldRotation();}, 2);
+    }
+}
+function touchRelease(){
+    clearInterval(held);
+    indicator.style.transition = "opacity 100ms";
+    indicator.style.opacity = "0%";
+    
+    if(touchHeld > 355){
+        currentCell.dispatchEvent(new Event("contextmenu"));
+    }
+    else{
+        currentCell.click();
+    }
+    touchHeld = 0;
+    setTimeout(function(){
+        indicator.style.transition = "opacity 500ms";
+        indicator_prog.style.clipPath = "polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)";
+    }, 200)
+}
+function heldRotation(){
+    var rad = (-1 * ((touchHeld * Math.PI)/180) + (Math.PI / 2));
+    var poly = "polygon(50% 0%, 50% 50%, ";
+    var remainder_poly = "";
+    x = (Math.cos(rad) * 50);
+    y = (Math.sin(rad) * 50);
+    y = y * -1;
+    x = x + 50;
+    y = y + 50;
+    switch(Math.floor(touchHeld/45)){
+        case 0:
+            poly = poly + x + "% " + y + "%, " + "100% " + y + "%, 100% 100%, 0% 100%, 0% 0%)";
+            break;
+        case 1:
+            poly = poly + x + "% " + y + "%, " + "100% " + y + "%, 100% 100%, 0% 100%, 0% 0%)";
+            break;
+        case 2:
+            poly = poly + x + "% " + y + "%, " + x + "% 100%, 100% 100%, 0% 100%, 0% 0%)";
+            break;
+        case 3:
+            poly = poly + x + "% " + y + "%, " + x + "% 100%, 100% 100%, 0% 100%, 0% 0%)";
+            break;
+        case 4:
+            poly = poly + x + "% " + y + "%, " + "0% " + y + "%, 0% 100%, 0% 0%)";
+            break;
+        case 5:
+            poly = poly + x + "% " + y + "%, " + "0% " + y + "%, 0% 100%, 0% 0%)";
+            break;
+        case 6:
+            poly = poly + x + "% " + y + "%, " + x + "% 0%, 0% 0%)";
+            break;
+        case 7:
+            poly = poly + x + "% " + y + "%, " + x + "% 0%, 0% 0%)";
+            break;
+    }
+    indicator_prog.style.clipPath = poly;
+    // document.getElementById("indicator-debug").innerHTML = touchHeld.toString() + "(" + x + "," + y + ")<br>rads:" + rad + "<br>" + poly;
 }
 function generateMines(x, y){
     /*minMines=Math.floor((rows*col)/6);*/
@@ -306,16 +389,19 @@ function zeroAdj(x1, y1, x2, y2){
 }
 function gameOver(b=true){
     alive=false;
+    document.getElementById("game-frame").setAttribute("paused", "true");
     clearInterval(interval);
     for(i=0; i<rows; i++){
         for(j=0; j<col; j++){
-            cells[i][j].blow(b);
+                cells[i][j].blow(b, (i * 5) + j);
+
         }
     }
-    document.getElementById("menu").style.display ="block";
-    
-    document.getElementById("new-game").style.display="none";
-    document.getElementById("game-over").style.display="block";
+    setTimeout(function(){
+        document.getElementById("menu").style.display ="block";
+        document.getElementById("new-game").style.display="none";
+        document.getElementById("game-over").style.display="block";
+    }, 15 * (((rows - 1) * 6) + (col - 1)) );
     if(b){
         document.getElementById("result").firstElementChild.innerHTML = "Game Over!";
     }
@@ -357,6 +443,7 @@ function menu(){
     document.getElementById("game-over").style.display = "none";
     document.getElementById("new-game").style.display = "block";
     document.getElementById("themes").style.display="block";
+    document.getElementsByTagName("header")[0].style.display="block";
     clear();
     gameStart = false;
 }
